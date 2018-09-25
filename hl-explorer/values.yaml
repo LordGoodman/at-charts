@@ -36,6 +36,12 @@ db:
   chart: hle-pg-postgresql
   database: hl_explorer
 
+secrets:
+  # We need a secret for the Organisation certificate and key
+  adminCert: hlf--peer-admincert
+  adminKey: hlf--peer-adminkey
+  hlbConnection: hl--explorer-connection
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

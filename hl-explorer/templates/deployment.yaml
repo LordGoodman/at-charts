@@ -16,10 +16,27 @@ spec:
         app: {{ include "hl-explorer.name" . }}
         release: {{ .Release.Name }}
     spec:
+      volumes:
+        {{- if .Values.secrets.adminCert }}
+        - name: admin-cert
+          secret:
+            secretName: {{ .Values.secrets.adminCert }}
+        {{- end }}
+        {{- if .Values.secrets.adminKey }}
+        - name: admin-key
+          secret:
+            secretName: {{ .Values.secrets.adminKey }}
+        {{- end }}
+        {{- if .Values.secrets.hlbConnection }}
+        - name: hlb-connection
+          configMap:
+            name: {{ .Values.secrets.hlbConnection }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # TODO: Add liveness and readiness probes
           envFrom:
             - configMapRef:
                 name: {{ include "hl-explorer.fullname" . }}--db
@@ -36,14 +53,20 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
+          volumeMounts:
+            {{- if .Values.secrets.adminCert }}
+            - mountPath: /hl_config/admin/signcerts
+              name: admin-cert
+            {{- end }}
+            {{- if .Values.secrets.adminKey }}
+            - mountPath: /hl_config/admin/keystore
+              name: admin-key
+            {{- end }}
+            {{- if .Values.secrets.hlbConnection }}
+            - mountPath: /opt/explorer/app/platform/fabric/config.json
+              subPath: config.json
+              name: hlb-connection
+            {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
