@@ -43,6 +43,7 @@ secrets:
   ordAdminCert: hlf--ord-admincert
   ordAdminKey: hlf--ord-adminkey
   hlbConnection: hl--explorer-connection
+  caServerTls: ica-peer--tls
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

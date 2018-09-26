@@ -42,6 +42,11 @@ spec:
           configMap:
             name: {{ .Values.secrets.hlbConnection }}
         {{- end }}
+        {{- if .Values.secrets.caServerTls }}
+        - name: ca-server-tls
+          secret:
+            secretName: {{ .Values.secrets.caServerTls }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -84,6 +89,10 @@ spec:
             - mountPath: /opt/explorer/app/platform/fabric/config.json
               subPath: config.json
               name: hlb-connection
+            {{- end }}
+            {{- if .Values.secrets.caServerTls }}
+            - mountPath: /hl_config/ca_server/tls
+              name: ca-server-tls
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
