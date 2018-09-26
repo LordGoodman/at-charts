@@ -38,8 +38,10 @@ db:
 
 secrets:
   # We need a secret for the Organisation certificate and key
-  adminCert: hlf--peer-admincert
-  adminKey: hlf--peer-adminkey
+  peerAdminCert: hlf--peer-admincert
+  peerAdminKey: hlf--peer-adminkey
+  ordAdminCert: hlf--ord-admincert
+  ordAdminKey: hlf--ord-adminkey
   hlbConnection: hl--explorer-connection
 
 resources: {}

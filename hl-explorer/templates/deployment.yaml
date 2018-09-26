@@ -17,15 +17,25 @@ spec:
         release: {{ .Release.Name }}
     spec:
       volumes:
-        {{- if .Values.secrets.adminCert }}
-        - name: admin-cert
+        {{- if .Values.secrets.peerAdminCert }}
+        - name: peer-admin-cert
           secret:
-            secretName: {{ .Values.secrets.adminCert }}
+            secretName: {{ .Values.secrets.peerAdminCert }}
         {{- end }}
-        {{- if .Values.secrets.adminKey }}
-        - name: admin-key
+        {{- if .Values.secrets.peerAdminKey }}
+        - name: peer-admin-key
           secret:
-            secretName: {{ .Values.secrets.adminKey }}
+            secretName: {{ .Values.secrets.peerAdminKey }}
+        {{- end }}
+        {{- if .Values.secrets.ordAdminCert }}
+        - name: ord-admin-cert
+          secret:
+            secretName: {{ .Values.secrets.ordAdminCert }}
+        {{- end }}
+        {{- if .Values.secrets.ordAdminKey }}
+        - name: ord-admin-key
+          secret:
+            secretName: {{ .Values.secrets.ordAdminKey }}
         {{- end }}
         {{- if .Values.secrets.hlbConnection }}
         - name: hlb-connection
@@ -54,13 +64,21 @@ spec:
               containerPort: 8080
               protocol: TCP
           volumeMounts:
-            {{- if .Values.secrets.adminCert }}
-            - mountPath: /hl_config/admin/signcerts
-              name: admin-cert
+            {{- if .Values.secrets.peerAdminCert }}
+            - mountPath: /hl_config/peer/admin/signcerts
+              name: peer-admin-cert
             {{- end }}
-            {{- if .Values.secrets.adminKey }}
-            - mountPath: /hl_config/admin/keystore
-              name: admin-key
+            {{- if .Values.secrets.peerAdminKey }}
+            - mountPath: /hl_config/peer/admin/keystore
+              name: peer-admin-key
+            {{- end }}
+            {{- if .Values.secrets.ordAdminCert }}
+            - mountPath: /hl_config/ord/admin/signcerts
+              name: ord-admin-cert
+            {{- end }}
+            {{- if .Values.secrets.ordAdminKey }}
+            - mountPath: /hl_config/ord/admin/keystore
+              name: ord-admin-key
             {{- end }}
             {{- if .Values.secrets.hlbConnection }}
             - mountPath: /opt/explorer/app/platform/fabric/config.json
